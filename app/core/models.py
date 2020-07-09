@@ -3,15 +3,16 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
                                         PermissionsMixin
 
 
-class  UserManager(BaseUserManager):
+class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
         """creates and saves a new user """
-        if not email :
+        if not email:
             raise ValueError("User must have an email")
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db) #to support multipule databases **good practice**
+        user.save(using=self._db)
+        # to support multipule databases **good practice**
 
         return user
 

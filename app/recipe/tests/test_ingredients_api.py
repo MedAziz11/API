@@ -64,3 +64,20 @@ class AuthIngredientApiTest(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertEqual(len(res.data), 1)
         self.assertEqual(res.data[0]['name'], ingredient.name)
+
+    def test_creating_ingredients_successful(self):
+        """tests creating ingredients for the auth user"""
+        payload = {'name': 'Test name'}
+        self.client.post(INGREDIENT_URL, payload)
+        exists = Ingredient.objects.filter(
+            user=self.user,
+            name=payload['name']
+        ).exists()
+
+        self.assertTrue(exists)
+
+    def test_valid_name_ingredient(self):
+        """test that the ingredient name is valid"""
+        res = self.client.post(INGREDIENT_URL, {'name': ''})
+
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
